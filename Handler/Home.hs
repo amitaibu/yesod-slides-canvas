@@ -1,12 +1,13 @@
 module Handler.Home where
 
-import Import
-import Yesod.Form.Bootstrap3 (BootstrapFormLayout (..), renderBootstrap3)
-import Text.Julius (RawJS (..))
+import           Import
+import           Text.Julius           (RawJS (..))
+import           Yesod.Form.Bootstrap3 (BootstrapFormLayout (..),
+                                        renderBootstrap3)
 
 -- Define our data that will be used for creating the form.
 data FileForm = FileForm
-    { fileInfo :: FileInfo
+    { fileInfo        :: FileInfo
     , fileDescription :: Text
     }
 
@@ -19,6 +20,11 @@ data FileForm = FileForm
 -- inclined, or create a single monolithic file.
 getHomeR :: Handler Html
 getHomeR = do
+    App { appBroadcastChannel = writeChan } <- getYesod
+    readChan <- atomically $ do
+        writeTChan writeChan $ "from getHomeR"
+        dupTChan writeChan
+
     (formWidget, formEnctype) <- generateFormPost sampleForm
     let submission = Nothing :: Maybe FileForm
         handlerName = "getHomeR" :: Text
