@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE DeriveGeneric #-}
 
 module Model where
 
@@ -11,3 +12,13 @@ import Database.Persist.Quasi
 -- http://www.yesodweb.com/book/persistent/
 share [mkPersist sqlSettings, mkMigrate "migrateAll"]
     $(persistFileWith lowerCaseSettings "config/models")
+
+
+data Lesson = Lesson
+    { lessonId :: Int
+    , lessondCurrentSlide :: Maybe Int
+    } deriving (Show, Generic)
+
+
+instance ToJSON Lesson
+instance FromJSON Lesson
