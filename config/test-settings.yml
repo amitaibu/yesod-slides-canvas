@@ -6,6 +6,6 @@ database:
   # something like:
   #
   #   database: "_env:PGDATABASE:yesod-slides-canvas_LOWER_test"
-  database: yesod-slides-canvas_LOWER_test
+  database: slides_canvas_test
 
 auth-dummy-login: true

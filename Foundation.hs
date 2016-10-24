@@ -25,6 +25,7 @@ data App = App
     , appConnPool    :: ConnectionPool -- ^ Database connection pool.
     , appHttpManager :: Manager
     , appLogger      :: Logger
+    , appBroadcastChannel :: TChan Text -- ^ Broadcast channel for websockets.
     }
 
 data MenuItem = MenuItem

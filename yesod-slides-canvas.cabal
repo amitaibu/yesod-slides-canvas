@@ -24,6 +24,7 @@ library
                      Handler.Home
                      Handler.Comment
                      Handler.Profile
+                     Handler.Socket
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT
