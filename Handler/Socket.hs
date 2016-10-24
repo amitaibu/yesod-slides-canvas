@@ -1,12 +1,15 @@
 module Handler.Socket where
 
+import           Data.Aeson.Encode
 import           Import
 import           Yesod.WebSockets
+
 
 chatStream :: WebSocketsT Handler ()
 chatStream = do
     let lesson = toJSON $ Lesson 1 (Just 10)
     sendTextData ("Welcome to the chat server, please enter your name." :: Text)
+    sendTextData $ encode lesson
     name <- receiveData
     sendTextData $ "Welcome, " <> name
     App { appBroadcastChannel = writeChan } <- getYesod
