@@ -7,7 +7,7 @@ import           Yesod.WebSockets
 
 chatStream :: WebSocketsT Handler ()
 chatStream = do
-    let lesson = toJSON $ Lesson 1 (Just 10)
+    let lesson = toJSON $ Lesson 1 Nothing
     sendTextData ("Welcome to the chat server, please enter your name." :: Text)
     sendTextData $ encode lesson
     name <- receiveData
