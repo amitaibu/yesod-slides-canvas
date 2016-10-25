@@ -21,8 +21,10 @@ chatStream = do
 
     race_
         (forever $ atomically (readTChan readChan) >>= sendTextData)
-        (sourceWSText $$ mapM_C (\_ -> atomically $ writeTChan writeChan $ lessonToText $ Lesson 1 Nothing))
-
+        (sourceWS $$ mapM_C (\msg -> do
+            users <- lift (runDB $ selectList [] [] :: Handler [Entity User])
+            atomically $ writeTChan writeChan $ msg
+        ))
 
 sourceWSText :: MonadIO m => ConduitM i Text (WebSocketsT m) ()
 sourceWSText = sourceWS
