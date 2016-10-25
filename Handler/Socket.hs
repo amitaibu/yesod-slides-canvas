@@ -3,6 +3,8 @@ module Handler.Socket where
 import           Data.Aeson.Encode
 import           Import
 import           Yesod.WebSockets
+import Data.Text.Lazy.Builder (toLazyText)
+
 
 
 chatStream :: WebSocketsT Handler ()
@@ -19,10 +21,14 @@ chatStream = do
 
     race_
         (forever $ atomically (readTChan readChan) >>= sendTextData)
-        (sourceWS $$ mapM_C (\msg ->
-            atomically $ do
-                writeTChan writeChan $ name <> ": " <> msg
-        ))
+        (sourceWSText $$ mapM_C (\_ -> atomically $ writeTChan writeChan $ lessonToText $ Lesson 1 Nothing))
+
+
+sourceWSText :: MonadIO m => ConduitM i Text (WebSocketsT m) ()
+sourceWSText = sourceWS
+
+lessonToText :: Lesson -> Text
+lessonToText = toStrict . toLazyText . encodeToTextBuilder . toJSON
 
 getSocketR :: Handler Html
 getSocketR = do
