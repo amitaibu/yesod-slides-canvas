@@ -9,24 +9,23 @@ Lesson json
     deriving Typeable Show
 Slide json
     name Text
-    mediaType MediaType
-    mediaUrl Text
+    lesson LessonId
     deriving Typeable Show
 EmbedText json
     body Text
     fontSize Int
     slide SlideId
     delta Int
-    x Int
-    y Int
+    positionX Int
+    positionY Int
     deriving Typeable Show
 EmbedImage json
     url Text
     ratio Int
     slide SlideId
     delta Int
-    x Int
-    y Int
+    positionX Int
+    positionY Int
     deriving Typeable Show
 Email
     email Text

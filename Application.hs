@@ -99,10 +99,48 @@ migrateData pool = do
             return ()
 
         Nothing -> do
-            -- User
+            -- Users
             userId1 <- runSqlPool (insert $ createUser "admin") pool
             userId2 <- runSqlPool (insert $ createUser "demo")  pool
             userId3 <- runSqlPool (insert $ createUser "migo")  pool
+
+            -- Lessons
+            lesson1 <- runSqlPool (insert $ Lesson "lesson1" Nothing) pool
+            lesson2 <- runSqlPool (insert $ Lesson "lesson2" Nothing) pool
+
+            -- Slides
+            slide1 <- runSqlPool (insert $ Slide "slide1" lesson1) pool
+            slide2 <- runSqlPool (insert $ Slide "slide2" lesson1) pool
+            slide3 <- runSqlPool (insert $ Slide "slide3" lesson1) pool
+            slide4 <- runSqlPool (insert $ Slide "slide4 - lesson2" lesson2) pool
+
+            -- Embed Text
+            embedText1 <- runSqlPool (insert $ EmbedText
+                    { embedTextBody = "embedText1 body"
+                    , embedTextFontSize = 12
+                    , embedTextSlide = slide1
+                    , embedTextDelta = 0
+                    , embedTextPositionX = 0
+                    , embedTextPositionY = 0
+                    }) pool
+
+            embedText2 <- runSqlPool (insert $ EmbedText
+                    { embedTextBody = "embedText2 body"
+                    , embedTextFontSize = 12
+                    , embedTextSlide = slide1
+                    , embedTextDelta = 0
+                    , embedTextPositionX = 10
+                    , embedTextPositionY = 10
+                    }) pool
+
+            embedText3 <- runSqlPool (insert $ EmbedText
+                    { embedTextBody = "embedText3 body"
+                    , embedTextFontSize = 12
+                    , embedTextSlide = slide2
+                    , embedTextDelta = 0
+                    , embedTextPositionX = 100
+                    , embedTextPositionY = 100
+                    }) pool
 
             -- Don't return anything.
             return ()
