@@ -3,6 +3,15 @@ User
     password Text Maybe
     UniqueUser ident
     deriving Typeable
+Lesson json
+    name Text
+    selectedSlide SlideId Maybe
+    deriving Typeable Show
+Slide json
+    name Text
+    mediaType MediaType
+    mediaUrl Text
+    deriving Typeable Show
 Email
     email Text
     userId UserId Maybe
