@@ -9,5 +9,7 @@
 /comments CommentR POST
 
 /profile ProfileR GET
+
 /ws SocketR GET
+
 /api/slides/#SlideId SlideR GET

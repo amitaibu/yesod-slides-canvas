@@ -95,6 +95,7 @@ library
                  , wai
 
                  , conduit-combinators
+                 , resource-pool
                  , stm-lifted
                  , yesod-websockets
 

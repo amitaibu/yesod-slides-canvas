@@ -16,6 +16,7 @@ module Application
 import Control.Monad.Logger                 (liftLoc, runLoggingT)
 import Database.Persist.Postgresql          (createPostgresqlPool, pgConnStr,
                                              pgPoolSize, runSqlPool)
+import Data.Pool
 import Import
 import Language.Haskell.TH.Syntax           (qLocation)
 import Network.Wai (Middleware)
@@ -37,7 +38,8 @@ import Handler.Home
 import Handler.Comment
 import Handler.Profile
 import Handler.Socket
-import Handler.Slide
+
+import Handler.Api.Slide
 
 -- This line actually creates our YesodDispatch instance. It is the second half
 -- of the call to mkYesodData which occurs in Foundation.hs. Please see the
@@ -81,8 +83,35 @@ makeFoundation appSettings = do
     -- Perform database migration using our application's logging settings.
     runLoggingT (runSqlPool (runMigration migrateAll) pool) logFunc
 
+    -- Migrate data.
+    _ <- migrateData pool
+
     -- Return the foundation
     return $ mkFoundation pool
+
+migrateData :: Pool SqlBackend -> IO ()
+migrateData pool = do
+    -- Migrate data only if "admin" is missing.
+    maybeUser <- runSqlPool (getBy $ UniqueUser "admin") pool
+    case maybeUser of
+        Just (Entity _ _) -> do
+            putStrLn "---- Skipped migration"
+            return ()
+
+        Nothing -> do
+            -- User
+            userId1 <- runSqlPool (insert $ createUser "admin") pool
+            userId2 <- runSqlPool (insert $ createUser "demo")  pool
+            userId3 <- runSqlPool (insert $ createUser "migo")  pool
+
+            -- Don't return anything.
+            return ()
+            where
+                createUser name =
+                    User
+                        { userIdent = name
+                        , userPassword = Nothing
+                        }
 
 -- | Convert our foundation to a WAI Application by calling @toWaiAppPlain@ and
 -- applying some additional middlewares.
