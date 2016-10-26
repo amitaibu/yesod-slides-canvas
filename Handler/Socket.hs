@@ -9,7 +9,7 @@ import Data.Text.Lazy.Builder (toLazyText)
 
 chatStream :: WebSocketsT Handler ()
 chatStream = do
-    let lesson = toJSON $ Lesson 1 Nothing
+    let lesson = toJSON $ Lesson "First lesson" Nothing
     sendTextData ("Welcome to the chat server, please enter your name." :: Text)
     sendTextData $ encode lesson
     name <- receiveData
