@@ -12,6 +12,22 @@ Slide json
     mediaType MediaType
     mediaUrl Text
     deriving Typeable Show
+EmbedText json
+    body Text
+    fontSize Int
+    slide SlideId
+    delta Int
+    x Int
+    y Int
+    deriving Typeable Show
+EmbedImage json
+    url Text
+    ratio Int
+    slide SlideId
+    delta Int
+    x Int
+    y Int
+    deriving Typeable Show
 Email
     email Text
     userId UserId Maybe
