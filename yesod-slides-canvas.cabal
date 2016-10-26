@@ -21,6 +21,7 @@ library
                      Model.Types
                      Settings
                      Settings.StaticFiles
+                     Handler.Api.Slide
                      Handler.Common
                      Handler.Home
                      Handler.Comment
