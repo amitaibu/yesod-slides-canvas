@@ -4,14 +4,13 @@ import qualified Data.HashMap.Strict as HM
 import           Import
 
 
--- addEmbeds :: SlideId
---           -> Slide
---           -> Value
---           -> Maybe (HashMap Text Value)
+addEmbeds :: SlideId
+          -> Slide
+          -> [Value]
+          -> Maybe (HashMap Text Value)
 addEmbeds slideId slide embeds =
     case toJSON (Entity slideId slide) of
-        Object obj -> Just $ HM.insert "embeds" (object [("foo", String "Bar")]) obj
-        -- Object obj -> Just obj
+        Object obj -> Just $ HM.insert "embeds" embeds obj
         _          -> Nothing
 
 valueToHash :: (ToJSON (Entity record), PersistEntity record)
@@ -28,6 +27,7 @@ getSlideR slideId = do
     slide <- runDB $ get404 slideId
 
     embedsBySlide <- runDB $ selectList [SlideId ==. slideId] []
-    let slideWitheEmbeds = addEmbeds slideId slide embedsBySlide
+    let embeds = [entityIdToJSON (Entity k r) | Entity k r <- embedsBySlide]
+    let slideWitheEmbeds = addEmbeds slideId slide embeds
 
     return $ object ["data" .= slideWitheEmbeds]
