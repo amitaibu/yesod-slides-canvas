@@ -14,7 +14,10 @@ getSlideR slideId = do
     embedTextsBySlide <- runDB $ selectList [EmbedTextSlide ==. slideId] [] :: Handler [Entity EmbedText]
     embedImagesBySlide <- runDB $ selectList [EmbedImageSlide ==. slideId] [] :: Handler [Entity EmbedImage]
 
-    let embeds = Array $ V.fromList [entityIdToJSON (Entity k r) | Entity k r <- embedTextsBySlide]
+    let embedTextVector = V.fromList [entityIdToJSON (Entity k r) | Entity k r <- embedTextsBySlide]
+    let embedImageVector = V.fromList [entityIdToJSON (Entity k r) | Entity k r <- embedImagesBySlide]
+
+    let embeds = Array $ embedTextVector <> embedImageVector
 
     let slideWitheEmbeds = HM.insert "embeds" embeds slideHM
 
