@@ -1,33 +1,19 @@
 module Handler.Api.Slide where
 
 import qualified Data.HashMap.Strict as HM
+import qualified Data.Vector         as V
 import           Import
-
-
-addEmbeds :: SlideId
-          -> Slide
-          -> [Value]
-          -> Maybe (HashMap Text Value)
-addEmbeds slideId slide embeds =
-    case toJSON (Entity slideId slide) of
-        Object obj -> Just $ HM.insert "embeds" embeds obj
-        _          -> Nothing
-
-valueToHash :: (ToJSON (Entity record), PersistEntity record)
-            => Key record
-            -> record -> Maybe (HashMap Text Value)
-valueToHash key record =
-    case toJSON (Entity key record) of
-        Object obj -> Just obj
-        _          -> Nothing
 
 
 getSlideR :: SlideId -> Handler Value
 getSlideR slideId = do
     slide <- runDB $ get404 slideId
 
-    embedsBySlide <- runDB $ selectList [SlideId ==. slideId] []
-    let embeds = [entityIdToJSON (Entity k r) | Entity k r <- embedsBySlide]
-    let slideWitheEmbeds = addEmbeds slideId slide embeds
+    let (Object slideHM) = entityIdToJSON (Entity slideId slide)
+
+    embedTextsBySlide <- runDB $ selectList [EmbedTextSlide ==. slideId] [] :: Handler [Entity EmbedText]
+    let embeds = Array $ V.fromList [entityIdToJSON (Entity k r) | Entity k r <- embedTextsBySlide]
+
+    let slideWitheEmbeds = HM.insert "embeds" embeds slideHM
 
     return $ object ["data" .= slideWitheEmbeds]
