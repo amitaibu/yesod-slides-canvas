@@ -147,7 +147,7 @@ migrateData pool = do
                     { embedImageUrl = "https://placehold.it/350x150"
                     , embedImageRatio = 1
                     , embedImageSlide = slide1
-                    , embedImageDelta = 0
+                    , embedImageDelta = 2
                     , embedImagePositionX = 0
                     , embedImagePositionY = 0
                     }) pool
