@@ -128,7 +128,7 @@ migrateData pool = do
                     { embedTextBody = "embedText2 body"
                     , embedTextFontSize = 12
                     , embedTextSlide = slide1
-                    , embedTextDelta = 0
+                    , embedTextDelta = 1
                     , embedTextPositionX = 10
                     , embedTextPositionY = 10
                     }) pool
@@ -137,10 +137,21 @@ migrateData pool = do
                     { embedTextBody = "embedText3 body"
                     , embedTextFontSize = 12
                     , embedTextSlide = slide2
-                    , embedTextDelta = 0
+                    , embedTextDelta = 2
                     , embedTextPositionX = 100
                     , embedTextPositionY = 100
                     }) pool
+
+            -- Embed Image
+            embedImage1 <- runSqlPool (insert $ EmbedImage
+                    { embedImageUrl = "https://placehold.it/350x150"
+                    , embedImageRatio = 1
+                    , embedImageSlide = slide1
+                    , embedImageDelta = 0
+                    , embedImagePositionX = 0
+                    , embedImagePositionY = 0
+                    }) pool
+
 
             -- Don't return anything.
             return ()
